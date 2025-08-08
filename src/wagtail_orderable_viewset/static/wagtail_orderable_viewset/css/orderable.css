@@ -1,0 +1,132 @@
+.listing__item__drag-handle {
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.listing__item__drag-handle svg {
+    width: 14px;
+    height: 14px;
+}
+
+.listing__item__drag-handle:hover {
+    opacity: 1;
+}
+
+.listing__item__drag-handle:active {
+    cursor: grabbing;
+}
+
+.sortable-ghost {
+    opacity: 0.4;
+    background-color: #f0f0f0;
+}
+
+.sortable-chosen {
+    background-color: #e3f2fd;
+}
+
+.sortable-drag {
+    opacity: 0.8;
+    transform: rotate(5deg);
+}
+
+.action-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.listing__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.listing__item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.25rem;
+    border: 1px solid #e1e5e9;
+    border-radius: 4px;
+    margin-bottom: 0.25rem;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.listing__item__actions {
+    transform: translateX(-10px);
+}
+
+.listing__item:hover {
+    background-color: #f8f9fa;
+    border-color: #b1b4b7ff;
+    box-shadow: 0 2px 4px rgba(0, 123, 186, 0.1);
+}
+
+.listing__item__content {
+    flex: 1;
+    display: flex;
+    align-items: right;
+}
+
+.listing__item__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.listing {
+    width: 100%;
+}
+
+/* Success message styling based on help-block help-info */
+#save-status .messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    margin-bottom: 0;
+}
+
+#save-status .message {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    min-width: 200px;
+}
+
+#save-status .message.success {
+    background-color: #d4edda;
+    border-left: 4px solid #28a745;
+    color: #155724;
+}
+
+#save-status .message.error {
+    background-color: #f8d7da;
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+}
+
+#save-status .message a {
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+#save-status .message p {
+    margin: 0;
+    flex: 1;
+}

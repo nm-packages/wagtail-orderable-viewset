@@ -1,0 +1,73 @@
+{% extends "wagtailadmin/base.html" %}
+{% load static i18n wagtailadmin_tags %}
+
+{% block titletag %}{% trans "Reorder" %} {{ model_verbose_name_plural }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+    <div id="save-status" style="display: none;"></div>
+    {% trans "Reorder" as reorder_trans %}
+    {% include "wagtailadmin/shared/header.html" with title=reorder_trans|add:" "|add:model_verbose_name_plural icon="list-ul" %}
+
+    <div class="nice-padding">
+        {% if object_list %}
+            <div class="help-block help-info">
+                <svg class="icon icon-help icon" aria-hidden="true"><use href="#icon-help"></use></svg>
+                <p>{% trans "Drag and drop a" %} {{ model_verbose_name|lower }} {% trans "below to change it's order. Changes are saved automatically." %}</p>
+            </div>
+
+
+            <div class="listing">
+                <ul class="listing__list" id="orderable-list" data-update-url="{{ update_url }}">
+                    {% for obj in object_list %}
+                    <li class="listing__item" data-id="{{ obj.pk }}">
+                        <div class="listing__item__drag-handle drag-handle" style="cursor: grab;">
+                            {% icon name="grip" %}
+                        </div>
+                        <div class="listing__item__content">
+                            <h2 class="listing__item__title">{{ obj }}</h2>
+                          </div>
+                          <div class="listing__item__actions">
+                            <a href="#" class="button button-small button--icon button-secondary move-first" data-id="{{ obj.pk }}">
+                              <span class="icon-wrapper"><svg class="icon icon-arrow-up icon" aria-hidden="true"><use href="#icon-arrow-up"></use></svg></span>
+                              {% trans "Move First" %}
+                            </a>
+                            <a href="#" class="button button-small button--icon button-secondary move-last" data-id="{{ obj.pk }}">
+                              <span class="icon-wrapper"><svg class="icon icon-arrow-down icon" aria-hidden="true"><use href="#icon-arrow-down"></use></svg></span>
+                              {% trans "Move Last" %}
+                            </a>
+                          </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="action-buttons">
+                <a href="{{ index_url }}" class="button button-secondary button--icon">
+                    {% icon name="arrow-left" %}
+                    {% trans "Back to" %} {{ model_verbose_name_plural }}
+                </a>
+                <a href="#header-title" class="button button-secondary button--icon">
+                    {% icon name="arrow-up" %}
+                    {% trans "Back to Top" %}
+                </a>
+            </div>
+        {% else %}
+            <div class="nice-padding">
+                <p>{% trans "No" %} {{ model_verbose_name_plural|lower }} {% trans "found." %}</p>
+                <a href="{{ index_url }}" class="button button-secondary">
+                    {% trans "Back to" %} {{ model_verbose_name_plural }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    {% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script type="module" src="{% versioned_static 'wagtail_orderable_viewset/js/orderable.js' %}"></script>
+{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% versioned_static 'wagtail_orderable_viewset/css/orderable.css' %}">
+{% endblock %}

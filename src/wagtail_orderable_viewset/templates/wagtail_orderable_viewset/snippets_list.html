@@ -1,0 +1,9 @@
+{% extends "wagtailsnippets/snippets/index.html" %}
+{% load i18n wagtailadmin_tags %}
+
+{% block titletag %}{{ model_opts.verbose_name_plural|capfirst }} - {{ block.super }}{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {% include "wagtail_orderable_viewset/_reorder_button_js.html" %}
+{% endblock %}
