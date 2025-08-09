@@ -1,10 +1,10 @@
 from wagtail import hooks
-from .views import (
+from home.admin_views import (
+    person_viewset,
     testimonial_viewset,
     team_member_viewset,
     faq_item_viewset,
     service_viewset,
-    PersonViewSet,
 )
 
 from wagtail.snippets.models import register_snippet
@@ -30,4 +30,4 @@ def register_service_viewset():
     return service_viewset
 
 
-register_snippet(PersonViewSet)
+register_snippet(person_viewset)

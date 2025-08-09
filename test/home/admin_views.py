@@ -80,3 +80,5 @@ class PersonViewSet(OrderableSnippetViewSet):
     list_display = ['name', 'age', 'city', 'team', 'is_active', 'sort_order']
     order_by = ['name']
     list_export = ['name', 'age', 'city', 'team', 'is_active']
+
+person_viewset = PersonViewSet()

@@ -1,6 +1,14 @@
 from django.db import models
 from wagtail_orderable_viewset.models import IncrementingOrderable
 
+from wagtail.models import Page
+
+
+class HomePage(Page):
+    pass
+
+
+
 
 class Testimonial(IncrementingOrderable):
     """
