@@ -52,22 +52,21 @@ class Command(BaseCommand):
         # Testimonials (uses sort_order)
         existing = Testimonial.objects.count()
         if existing < target:
-            start_index = (Testimonial.objects.aggregate(Max('sort_order'))['sort_order__max'] or 0) + 1
             to_create = []
             for i in range(existing, target):
-                order_val = start_index + (i - existing)
                 name = faker.name()
                 company = faker.company()
                 content = faker.paragraph(nb_sentences=3)
                 rating = random.randint(3, 5)
                 is_featured = random.random() < 0.25
+                sort_order = i + 1
                 to_create.append(Testimonial(
                     name=name,
                     company=company,
                     content=content,
                     rating=rating,
                     is_featured=is_featured,
-                    sort_order=order_val,
+                    sort_order=sort_order,
                 ))
             Testimonial.objects.bulk_create(to_create)
             self.stdout.write(f'Added {len(to_create)} testimonials (total: {target}).')
@@ -77,24 +76,23 @@ class Command(BaseCommand):
         # Team members (uses sort_order)
         existing = TeamMember.objects.count()
         if existing < target:
-            start_index = (TeamMember.objects.aggregate(Max('sort_order'))['sort_order__max'] or 0) + 1
             to_create = []
             roles = [
                 'Engineer', 'Designer', 'Product Manager', 'Data Analyst', 'DevOps',
                 'QA Engineer', 'Support Specialist', 'Tech Writer', 'Architect', 'Team Lead'
             ]
             for i in range(existing, target):
-                order_val = start_index + (i - existing)
                 name = faker.name()
                 bio = faker.paragraph(nb_sentences=2)
                 position = random.choice(roles)
                 email = faker.unique.email()
+                sort_order = i + 1
                 to_create.append(TeamMember(
                     name=name,
                     position=position,
                     bio=bio,
                     email=email,
-                    sort_order=order_val,
+                    sort_order=sort_order
                 ))
             TeamMember.objects.bulk_create(to_create)
             self.stdout.write(f'Added {len(to_create)} team members (total: {target}).')
@@ -104,21 +102,20 @@ class Command(BaseCommand):
         # FAQ items (uses display_order)
         existing = FAQItem.objects.count()
         if existing < target:
-            start_index = (FAQItem.objects.aggregate(Max('display_order'))['display_order__max'] or 0) + 1
             categories = ['general', 'technical', 'billing']
             to_create = []
             for i in range(existing, target):
-                order_val = start_index + (i - existing)
                 question = faker.sentence(nb_words=6).rstrip('.') + '?'
                 answer = faker.paragraph(nb_sentences=2)
                 category = random.choice(categories)
                 is_active = random.random() > 0.05
+                sort_order = i + 1
                 to_create.append(FAQItem(
                     question=question,
                     answer=answer,
                     category=category,
-                    display_order=order_val,
                     is_active=is_active,
+                    sort_order=sort_order
                 ))
             FAQItem.objects.bulk_create(to_create)
             self.stdout.write(f'Added {len(to_create)} FAQ items (total: {target}).')
@@ -128,7 +125,6 @@ class Command(BaseCommand):
         # Services (uses service_order)
         existing = Service.objects.count()
         if existing < target:
-            start_index = (Service.objects.aggregate(Max('service_order'))['service_order__max'] or 0) + 1
             to_create = []
             base_services = [
                 ('Website Design', 'Beautiful responsive websites'),
@@ -143,17 +139,17 @@ class Command(BaseCommand):
                 ('Consulting', 'Expert guidance tailored to you'),
             ]
             for i in range(existing, target):
-                order_val = start_index + (i - existing)
                 title = faker.catch_phrase()
                 description = faker.paragraph(nb_sentences=2)
                 price = (Decimal(random.randint(50, 200)) * Decimal('10.00'))
                 is_featured = random.random() < 0.2
+                sort_order = i + 1
                 to_create.append(Service(
                     title=title,
                     description=description,
                     price=price,
                     is_featured=is_featured,
-                    service_order=order_val,
+                    sort_order=sort_order
                 ))
             Service.objects.bulk_create(to_create)
             self.stdout.write(f'Added {len(to_create)} services (total: {target}).')
@@ -163,22 +159,21 @@ class Command(BaseCommand):
         # People (snippet, uses sort_order)
         existing = Person.objects.count()
         if existing < target:
-            start_index = (Person.objects.aggregate(Max('sort_order'))['sort_order__max'] or 0) + 1
             to_create = []
             cities = [
                 'New York', 'London', 'Paris', 'Berlin', 'Tokyo', 'Sydney',
                 'Toronto', 'San Francisco', 'Amsterdam', 'Copenhagen'
             ]
             for i in range(existing, target):
-                order_val = start_index + (i - existing)
                 name = faker.name()
                 age = random.randint(18, 80)
                 city = random.choice(cities)
+                sort_order = i + 1
                 to_create.append(Person(
                     name=name,
                     age=age,
                     city=city,
-                    sort_order=order_val,
+                    sort_order=sort_order
                 ))
             Person.objects.bulk_create(to_create)
             self.stdout.write(f'Added {len(to_create)} people (total: {target}).')
