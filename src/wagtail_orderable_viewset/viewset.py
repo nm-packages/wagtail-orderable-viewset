@@ -94,31 +94,6 @@ class OrderableViewSetMixin:
                         self.model.objects.filter(pk=pk).update(**{self.sort_order_field_name: index})
                 return JsonResponse({'success': True, 'updated': len(object_ids)})
 
-            # Fallback: single-item move by new position
-            item_id = request.POST.get('item_id')
-            new_position = int(request.POST.get('position', 0))
-
-            if not item_id:
-                return JsonResponse({'error': 'Item ID is required'}, status=400)
-
-            if hasattr(self.model, 'update_order'):
-                success, error = self.model.update_order(item_id, new_position)
-            else:
-                obj = self.model.objects.get(pk=item_id)
-                items = list(self.model.objects.order_by(self.sort_order_field_name).only('pk', self.sort_order_field_name))
-                current_index = next((i for i, o in enumerate(items) if o.pk == obj.pk), None)
-                if current_index is None:
-                    return JsonResponse({'error': 'Item not found'}, status=404)
-                items.pop(current_index)
-                items.insert(new_position, obj)
-                for i, o in enumerate(items, start=1):
-                    setattr(o, self.sort_order_field_name, i)
-                    o.save(update_fields=[self.sort_order_field_name])
-                success, error = True, None
-
-            if success:
-                return JsonResponse({'success': True})
-            return JsonResponse({'error': error}, status=400)
         except Exception as e:
             return JsonResponse({'error': f'Server error: {e}'}, status=500)
 

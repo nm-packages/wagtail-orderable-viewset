@@ -7,7 +7,7 @@ class IncrementingOrderable(Orderable):
     Abstract model that provides a sort_order field for ordering functionality.
     
     This mixin adds a sort_order IntegerField to any model that inherits from it.
-    The field is automatically managed by the ordering functionality.
+    The field is managed by the ordering functionality.
     """
 
     class Meta:
