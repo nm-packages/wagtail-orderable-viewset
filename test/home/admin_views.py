@@ -6,6 +6,7 @@ class TestimonialViewSet(OrderableModelViewSet):
     model = Testimonial
 
     form_fields = ['name', 'company', 'content', 'rating', 'is_featured']
+    # sort order is included for debugging only
     list_display = ['name', 'company', 'rating', 'is_featured', 'sort_order']
     list_filter = ['is_featured']
     list_export = ['name', 'company', 'rating', 'is_featured']
@@ -77,6 +78,7 @@ service_viewset = ServiceViewSet('service')
 
 class PersonViewSet(OrderableSnippetViewSet):
     model = Person
+    # sort order is included for debugging only
     list_display = ['name', 'age', 'city', 'team', 'is_active', 'sort_order']
     order_by = ['name']
     list_export = ['name', 'age', 'city', 'team', 'is_active']
