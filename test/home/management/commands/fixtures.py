@@ -4,7 +4,7 @@ from decimal import Decimal
 import random
 from faker import Faker
 
-from home.models import Testimonial, TeamMember, FAQItem, Service, Person
+from home.models import Testimonial, TeamMember, Person
 
 
 class Command(BaseCommand):
@@ -32,18 +32,12 @@ class Command(BaseCommand):
             self.stdout.write('Deleting existing records...')
             t_count = Testimonial.objects.count()
             tm_count = TeamMember.objects.count()
-            f_count = FAQItem.objects.count()
-            s_count = Service.objects.count()
             p_count = Person.objects.count()
             Testimonial.objects.all().delete()
             TeamMember.objects.all().delete()
-            FAQItem.objects.all().delete()
-            Service.objects.all().delete()
             Person.objects.all().delete()
             self.stdout.write(f' - Deleted Testimonials: {t_count}')
             self.stdout.write(f' - Deleted Team members: {tm_count}')
-            self.stdout.write(f' - Deleted FAQ items: {f_count}')
-            self.stdout.write(f' - Deleted Services: {s_count}')
             self.stdout.write(f' - Deleted People: {p_count}')
             if clear_only:
                 self.stdout.write(self.style.SUCCESS('All records cleared.'))
@@ -98,63 +92,6 @@ class Command(BaseCommand):
             self.stdout.write(f'Added {len(to_create)} team members (total: {target}).')
         else:
             self.stdout.write(f'Team members already >= {target} (total: {existing}).')
-
-        # FAQ items (uses display_order)
-        existing = FAQItem.objects.count()
-        if existing < target:
-            categories = ['general', 'technical', 'billing']
-            to_create = []
-            for i in range(existing, target):
-                question = faker.sentence(nb_words=6).rstrip('.') + '?'
-                answer = faker.paragraph(nb_sentences=2)
-                category = random.choice(categories)
-                is_active = random.random() > 0.05
-                sort_order = i + 1
-                to_create.append(FAQItem(
-                    question=question,
-                    answer=answer,
-                    category=category,
-                    is_active=is_active,
-                    sort_order=sort_order
-                ))
-            FAQItem.objects.bulk_create(to_create)
-            self.stdout.write(f'Added {len(to_create)} FAQ items (total: {target}).')
-        else:
-            self.stdout.write(f'FAQ items already >= {target} (total: {existing}).')
-
-        # Services (uses service_order)
-        existing = Service.objects.count()
-        if existing < target:
-            to_create = []
-            base_services = [
-                ('Website Design', 'Beautiful responsive websites'),
-                ('E-commerce Setup', 'Online stores with secure checkout'),
-                ('SEO Audit', 'Improve search rankings and visibility'),
-                ('Content Strategy', 'Plan and optimize your content'),
-                ('Cloud Migration', 'Move workloads to the cloud safely'),
-                ('Data Dashboard', 'KPIs and analytics in one place'),
-                ('Mobile App', 'iOS and Android development'),
-                ('Performance Tuning', 'Faster apps, happier users'),
-                ('Security Review', 'Harden your application and infra'),
-                ('Consulting', 'Expert guidance tailored to you'),
-            ]
-            for i in range(existing, target):
-                title = faker.catch_phrase()
-                description = faker.paragraph(nb_sentences=2)
-                price = (Decimal(random.randint(50, 200)) * Decimal('10.00'))
-                is_featured = random.random() < 0.2
-                sort_order = i + 1
-                to_create.append(Service(
-                    title=title,
-                    description=description,
-                    price=price,
-                    is_featured=is_featured,
-                    sort_order=sort_order
-                ))
-            Service.objects.bulk_create(to_create)
-            self.stdout.write(f'Added {len(to_create)} services (total: {target}).')
-        else:
-            self.stdout.write(f'Services already >= {target} (total: {existing}).')
 
         # People (snippet, uses sort_order)
         existing = Person.objects.count()
