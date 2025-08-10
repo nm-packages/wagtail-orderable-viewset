@@ -1,10 +1,10 @@
-# Example project usage
+# Example Project Usage
 
-This document explains how to run the bundled example project and showcases how to use `OrderableModelViewSet` and `OrderableSnippetViewSet`, including a custom ordering field.
+This guide shows how to run the example project and use `OrderableModelViewSet` and `OrderableSnippetViewSet`, including custom ordering fields.
 
-## Quick start
+## Quick Start
 
-1) Install and run the example
+### 1. Install and Run the Example
 
 ```bash
 # From the repo root
@@ -12,39 +12,38 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -e .
 
-cd sandbox
+cd test
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
 
-2) Seed sample data (optional but recommended)
+### 2. Seed Sample Data (Optional)
 
 ```bash
-cd sandbox
+cd test
 python manage.py create_sample_data --count 50
 ```
 
-Available flags:
-- --delete-existing: Delete all existing records first and then create new ones
-- --clear-only: Delete all records and exit without creating new data
-- --seed <int>: Control random seed (defaults to 1337)
+Flags:
+- `--delete-existing`: Delete all existing records before creating new ones
+- `--clear-only`: Delete all records and exit
+- `--seed <int>`: Set random seed (default: 1337)
 
-3) Visit the admin
+### 3. Visit the Admin
 
-- Go to `http://localhost:8000/admin`
-- You will see the following sections with ordering enabled:
-  - Testimonials (model)
-  - Team members (model)
-  - FAQ items (model, custom ordering field)
-  - Services (model, custom ordering field)
-  - People (snippet)
+Go to `http://localhost:8000/admin` and log in. You will see sections with ordering enabled:
+- Testimonials (model)
+- Team members (model)
+- FAQ items (model, custom ordering field)
+- Services (model, custom ordering field)
+- People (snippet)
 
-On each listing page, a Reorder button appears when there are at least two records. Click it to open a drag‑and‑drop interface that saves order automatically.
+On each listing page, a Reorder button appears when there are at least two records. Click it to open a drag-and-drop interface that saves order automatically.
 
-## How it works
+## How It Works
 
-### For models: OrderableModelViewSet
+### For Models: OrderableModelViewSet
 
 ```python
 # views.py
@@ -52,21 +51,20 @@ from wagtail_orderable_viewset.viewset import OrderableModelViewSet
 from .models import Testimonial
 
 class TestimonialViewSet(OrderableModelViewSet):
-    model = Testimonial
-    list_display = ["name", "company", "rating", "sort_order"]
-    search_fields = ["name", "company", "content"]
+  model = Testimonial
+  list_display = ["name", "company", "rating", "sort_order"]
+  search_fields = ["name", "company", "content"]
 
-# Register with Wagtail admin (example using hooks)
+# Register with Wagtail admin (using hooks)
 from wagtail import hooks
-
 testimonial_viewset = TestimonialViewSet("testimonial")
 
 @hooks.register("register_admin_viewset")
 def register_testimonial_viewset():
-    return testimonial_viewset
+  return testimonial_viewset
 ```
 
-Models can use the provided `IncrementingOrderable` base which manages an integer `sort_order` field and auto‑assigns it for new records:
+Models can use the provided `IncrementingOrderable` base, which manages an integer `sort_order` field and auto-assigns it for new records:
 
 ```python
 # models.py
@@ -74,34 +72,39 @@ from django.db import models
 from wagtail_orderable_viewset.models import IncrementingOrderable
 
 class Testimonial(IncrementingOrderable):
-    name = models.CharField(max_length=100)
-    company = models.CharField(max_length=100)
-    content = models.TextField()
-
-    class Meta:
-        ordering = ["name"]  # listing order can be independent of the stored sort field
+  name = models.CharField(max_length=100)
+  company = models.CharField(max_length=100)
+  content = models.TextField()
 ```
 
-### Custom ordering field
-
-If your model uses a custom ordering field, set `sort_order_field_name` on the viewset:
+### For Snippets: OrderableSnippetViewSet
 
 ```python
-# models.py
-class FAQItem(IncrementingOrderable):
-    question = models.CharField(max_length=200)
-    answer = models.TextField()
-    display_order = models.IntegerField(default=0, editable=False)
-
-    class Meta:
-        ordering = ["question"]
-
 # views.py
-class FAQItemViewSet(OrderableModelViewSet):
-    model = FAQItem
-    sort_order_field_name = "display_order"
-    list_display = ["question", "display_order"]
+from wagtail_orderable_viewset.viewset import OrderableSnippetViewSet
+from .models import Person
+
+class PersonViewSet(OrderableSnippetViewSet):
+  model = Person
+  list_display = ["name", "team", "sort_order"]
 ```
+
+Register with Wagtail admin as above.
+
+## Custom Ordering Fields
+
+You can use a custom integer field for ordering by overriding `sort_order_field_name` in your viewset:
+
+```python
+class ServiceViewSet(OrderableModelViewSet):
+  model = Service
+  sort_order_field_name = "display_order"
+  list_display = ["name", "display_order"]
+```
+
+## Patterns
+
+See the source code in the `test` directory for usage examples.
 
 ### For snippets: OrderableSnippetViewSet
 
