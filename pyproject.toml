@@ -36,5 +36,6 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+    "coverage>=7.10.2",
     "faker>=37.5.3",
 ]

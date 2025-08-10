@@ -21,4 +21,16 @@ if __name__ == "__main__":
     TestRunner = get_runner(settings)
     test_runner = TestRunner(verbosity=2)
     failures = test_runner.run_tests([test_dir])
+
+    # Run coverage report if coverage is installed and tests were run under coverage
+    try:
+        import coverage
+        cov = coverage.Coverage.current()
+        if cov:
+            cov.stop()
+            cov.save()
+            cov.report()
+    except Exception:
+        pass
+
     sys.exit(bool(failures))

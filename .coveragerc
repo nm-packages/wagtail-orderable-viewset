@@ -1,0 +1,8 @@
+
+[run]
+source = src/wagtail_orderable_viewset
+omit = */migrations/*
+
+[report]
+show_missing = True
+skip_covered = False
