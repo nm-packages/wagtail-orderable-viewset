@@ -25,5 +25,6 @@ class IncrementingOrderable(Orderable):
 
     def save(self, *args, **kwargs):
         if self.pk is None:
-            setattr(self, self.sort_order_field, self.get_sort_order_max() + 1)
+            # Ensure newly-created instances are appended to the end by default
+            setattr(self, 'sort_order', self.get_sort_order_max() + 1)
         super().save(*args, **kwargs)
