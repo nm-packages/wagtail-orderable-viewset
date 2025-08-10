@@ -3,6 +3,14 @@ from .models import Testimonial, TeamMember, Person
 
 
 class TestimonialViewSet(OrderableModelViewSet):
+    """
+    This viewset provides CRUD functionality for the Testimonial model with ordering capabilities.
+
+    It's based on the OrderableModelViewSet which inherits from Wagtail's ModelViewset
+
+    `search_fields` & `list_filter` is included to demonstrate that the reorder button position
+    which will be right aligned in the slim header.
+    """
     model = Testimonial
 
     # sort order is included for debugging only
@@ -25,6 +33,14 @@ testimonial_viewset = TestimonialViewSet('testimonial')
 
 
 class TeamMemberViewSet(OrderableModelViewSet):
+    """
+    This viewset provides CRUD functionality for the TeamMember model with ordering capabilities.
+
+    It's based on the OrderableModelViewSet which inherits from Wagtail's ModelViewset.
+
+    `search_fields` & `list_filter` is not included to demonstrate that the reorder button position
+    which will be left aligned in the slim header.
+    """
     model = TeamMember
 
     # sort order is included for debugging only
@@ -44,11 +60,21 @@ team_member_viewset = TeamMemberViewSet('team_member')
 
 
 class PersonViewSet(OrderableSnippetViewSet):
+    """
+    This viewset provides CRUD functionality for the Person model with ordering capabilities.
+
+    It's based on the OrderableSnippetViewSet which inherits from Wagtail's SnippetViewset.
+
+    `search_fields` & `list_filter` is included to demonstrate that the reorder button position
+    which will be right aligned in the slim header.
+    """
     model = Person
 
     # sort order is included for debugging only
     list_display = ['name', 'age', 'city', 'team', 'is_active', 'sort_order']
     list_export = ['name', 'age', 'city', 'team', 'is_active']
+    list_filter = ['is_active']
+    search_fields = ['name', 'city', 'team']
     
     order_by = ['name']
 

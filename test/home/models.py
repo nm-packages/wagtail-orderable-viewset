@@ -12,7 +12,7 @@ class HomePage(Page):
 
 class Testimonial(IncrementingOrderable):
     """
-    Example snippet that uses the default sort_order field.
+    Example model for testimonials which includes a incrementing sort_order field.
     """
     name = models.CharField(max_length=100)
     company = models.CharField(max_length=100)
@@ -29,7 +29,7 @@ class Testimonial(IncrementingOrderable):
 
 class TeamMember(IncrementingOrderable):
     """
-    Example snippet for team members with ordering.
+    Example model for team members which includes a incrementing sort_order field.
     """
     name = models.CharField(max_length=100)
     position = models.CharField(max_length=100)
@@ -44,6 +44,9 @@ class TeamMember(IncrementingOrderable):
 
 
 class Person(IncrementingOrderable):
+    """
+    Example model for people which includes a incrementing sort_order field.
+    """
     name = models.CharField(max_length=100)
     age = models.IntegerField()
     city = models.CharField(max_length=100)

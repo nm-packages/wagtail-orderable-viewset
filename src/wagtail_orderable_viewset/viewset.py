@@ -13,12 +13,14 @@ class OrderableViewSetMixin:
     """
     Mixin that provides shared ordering functionality for Wagtail viewsets.
     Works with both ModelViewSet and SnippetViewSet.
+
+    Default sort field name is "sort_order"
+    Subclasses can override this but IncrementingOrderable only supports a field named "sort_order"
     """
 
-    # Default sort field name; subclasses can override
     sort_order_field_name = "sort_order"
 
-    # Template used for the dedicated order view
+    # Template for the dedicated order view
     order_template_name = "wagtail_orderable_viewset/order.html"
 
     def get_index_view_kwargs(self, **kwargs):
@@ -50,7 +52,7 @@ class OrderableViewSetMixin:
     def get_index_url_name(self) -> str:
         """
         Determine the index route name for the viewset.
-        - ModelViewSet index view typically uses view_name = 'index'
+        - ModelViewSet index view uses view_name = 'index'
         - SnippetViewSet index view uses view_name = 'list'
         """
         view_name = getattr(self.index_view_class, "view_name", None)
@@ -105,19 +107,21 @@ class OrderableModelViewSet(OrderableViewSetMixin, ModelViewSet):
     """
     Custom ModelViewSet that adds a dedicated order view and AJAX endpoint
     and injects order-related context into the listing.
+
+    Inherits ordering behaviour from OrderableViewSetMixin
     """
 
     # Use our custom index (listing) template
     index_template_name = "wagtail_orderable_viewset/list.html"
-    # Inherits ordering behaviour from mixin
 
 
 class OrderableSnippetViewSet(OrderableViewSetMixin, SnippetViewSet):
     """
     Custom SnippetViewSet that adds a dedicated order view and AJAX endpoint
     and injects order-related context into the listing.
+
+    Inherits ordering behaviour from OrderableViewSetMixin
     """
 
     # Use a dedicated snippets index template
     index_template_name = "wagtail_orderable_viewset/snippets_list.html"
-    # Inherits ordering behaviour from mixin
