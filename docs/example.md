@@ -1,6 +1,6 @@
 # Example Project Usage
 
-This guide shows how to run the example project and use `OrderableModelViewSet` and `OrderableSnippetViewSet`, including custom ordering fields.
+This guide shows how to run the example project and use `OrderableModelViewSet` and `OrderableSnippetViewSet`.
 
 ## Quick Start
 
@@ -8,161 +8,178 @@ This guide shows how to run the example project and use `OrderableModelViewSet` 
 
 ```bash
 # From the repo root
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .
-
 cd test
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
+uv run manage.py migrate
+uv run manage.py createsuperuser
+uv run manage.py runserver
 ```
 
 ### 2. Seed Sample Data (Optional)
 
 ```bash
+# From the repo root
 cd test
-python manage.py create_sample_data --count 50
+uv run manage.py fixtures
 ```
 
 Flags:
+
+- `--count <int>`: Number of records to create (default: 50)
 - `--delete-existing`: Delete all existing records before creating new ones
 - `--clear-only`: Delete all records and exit
 - `--seed <int>`: Set random seed (default: 1337)
 
 ### 3. Visit the Admin
 
-Go to `http://localhost:8000/admin` and log in. You will see sections with ordering enabled:
+Go to `http://localhost:8000/admin` and log in. You will see menu items with ordering enabled:
+
 - Testimonials (model)
 - Team members (model)
-- FAQ items (model, custom ordering field)
-- Services (model, custom ordering field)
 - People (snippet)
 
 On each listing page, a Reorder button appears when there are at least two records. Click it to open a drag-and-drop interface that saves order automatically.
 
 ## How It Works
 
-### For Models: OrderableModelViewSet
+### OrderableModelViewSet
 
-```python
-# views.py
-from wagtail_orderable_viewset.viewset import OrderableModelViewSet
-from .models import Testimonial
-
-class TestimonialViewSet(OrderableModelViewSet):
-  model = Testimonial
-  list_display = ["name", "company", "rating", "sort_order"]
-  search_fields = ["name", "company", "content"]
-
-# Register with Wagtail admin (using hooks)
-from wagtail import hooks
-testimonial_viewset = TestimonialViewSet("testimonial")
-
-@hooks.register("register_admin_viewset")
-def register_testimonial_viewset():
-  return testimonial_viewset
-```
-
-Models can use the provided `IncrementingOrderable` base, which manages an integer `sort_order` field and auto-assigns it for new records:
+Define a model that uses the `IncrementingOrderable` base class:
 
 ```python
 # models.py
-from django.db import models
 from wagtail_orderable_viewset.models import IncrementingOrderable
 
 class Testimonial(IncrementingOrderable):
-  name = models.CharField(max_length=100)
-  company = models.CharField(max_length=100)
-  content = models.TextField()
+    name = models.CharField(max_length=100)
+    company = models.CharField(max_length=100)
+    content = models.TextField()
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], default=5)
+    is_featured = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['name']
+    
+    def __str__(self):
+        return f"{self.name} - {self.company}"
 ```
 
-### For Snippets: OrderableSnippetViewSet
+Define a viewset:
 
 ```python
-# views.py
-from wagtail_orderable_viewset.viewset import OrderableSnippetViewSet
-from .models import Person
+# admin_views.py
+from wagtail_orderable_viewset.viewset import OrderableModelViewSet
 
-class PersonViewSet(OrderableSnippetViewSet):
-  model = Person
-  list_display = ["name", "team", "sort_order"]
+class TestimonialViewSet(OrderableModelViewSet):
+    model = Testimonial
+
+    list_display = ['name', 'company', 'rating', 'is_featured']
+    list_filter = ['is_featured']
+    list_export = ['name', 'company', 'rating', 'is_featured']
+    
+    form_fields = ['name', 'company', 'content', 'rating', 'is_featured']
+
+    search_fields = ['name', 'company', 'content']
+    order_by = ['name']
+
+    menu_label = 'Testimonials'
+    icon = 'folder-open-1'
+    menu_order = 100
+    add_to_admin_menu = True
+
+testimonial_viewset = TestimonialViewSet('testimonial')
 ```
 
-Register with Wagtail admin as above.
-
-## Custom Ordering Fields
-
-You can use a custom integer field for ordering by overriding `sort_order_field_name` in your viewset:
+Register the viewset with Wagtail admin (using hooks):
 
 ```python
-class ServiceViewSet(OrderableModelViewSet):
-  model = Service
-  sort_order_field_name = "display_order"
-  list_display = ["name", "display_order"]
+# wagtail_hooks.py
+from wagtail import hooks
+
+from .admin_views import testimonial_viewset
+
+@hooks.register("register_admin_viewset")
+def register_testimonial_viewset():
+    return testimonial_viewset
 ```
 
-## Patterns
-
-See the source code in the `test` directory for usage examples.
-
-### For snippets: OrderableSnippetViewSet
+### OrderableSnippetViewSet
 
 ```python
 # models.py
+from wagtail_orderable_viewset.models import IncrementingOrderable
+
 class Person(IncrementingOrderable):
     name = models.CharField(max_length=100)
     age = models.IntegerField()
     city = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    team = models.CharField(max_length=50, choices=[
+        ('engineering', 'Engineering'),
+        ('marketing', 'Marketing'),
+        ('sales', 'Sales'),
+        ('support', 'Support'),
+        ('hr', 'HR'),
+    ])
 
     class Meta:
-        ordering = ["name"]
-        verbose_name = "Person"
-        verbose_name_plural = "People"
+        ordering = ['name']
+        verbose_name = 'Person'
+        verbose_name_plural = 'People'
 
-# views.py
+    def __str__(self):
+        return self.name
+```
+
+Define a viewset:
+
+```python
+# admin_views.py
 from wagtail_orderable_viewset.viewset import OrderableSnippetViewSet
+
+from .models import Person
 
 class PersonViewSet(OrderableSnippetViewSet):
     model = Person
-    list_display = ["name", "age", "city", "sort_order"]
-    search_fields = ["name", "city"]
 
-# register_snippet
-from wagtail.snippets.models import register_snippet
+    list_display = ['name', 'age', 'city', 'team', 'is_active']
+    list_export = ['name', 'age', 'city', 'team', 'is_active']
+    list_filter = ['is_active']
+    search_fields = ['name', 'city', 'team']
+    
+    order_by = ['name']
 
-register_snippet(PersonViewSet)
+    icon = 'user'
+
+person_viewset = PersonViewSet()
 ```
 
-`OrderableSnippetViewSet` provides the same ordering UI and endpoints for snippets. The index template is tailored to the snippets listings and includes a Reorder button when applicable.
+Register the viewset with Wagtail admin (using hooks):
+
+```python
+# wagtail_hooks.py
+from wagtail.snippets.models import register_snippet
+
+from .admin_views import person_viewset
+
+register_snippet(person_viewset)
+```
+
+## Usage Patterns
+
+See the source code in the `test` directory for usage examples.
 
 ## What the viewsets add
 
 Both `OrderableModelViewSet` and `OrderableSnippetViewSet`:
+
 - Inject a Reorder button into the listing page
 - Provide an Order page with drag‑and‑drop (SortableJS)
 - Expose a POST endpoint for updating order (bulk list or single‑item move)
-- Respect a configurable `sort_order_field_name` (default: `sort_order`)
 
 The implementation uses a shared `OrderableViewSetMixin` so you can extend or override behavior in one place if needed.
-
-## Files of interest
-
-- Templates
-  - `wagtail_orderable_viewset/list.html` (models index)
-  - `wagtail_orderable_viewset/snippets_list.html` (snippets index)
-  - `wagtail_orderable_viewset/order.html` (drag‑and‑drop order page)
-- Static
-  - `wagtail_orderable_viewset/js/orderable.js`
-  - `wagtail_orderable_viewset/css/orderable.css`
-- Python
-  - `wagtail_orderable_viewset/viewset.py` (viewsets + mixin)
-  - `wagtail_orderable_viewset/models.py` (`IncrementingOrderable`)
 
 ## Troubleshooting
 
 - Reorder button not visible: it only appears when the listing has 2+ items.
 - NoReverseMatch on snippet order page: ensure you are using `OrderableSnippetViewSet` for snippets; it wires the correct `list` route internally.
 - CSRF issues on reorder: make sure you are logged in via the admin and the browser is sending cookies; the JS includes the CSRF token automatically.
-
-
