@@ -5,15 +5,14 @@ Add drag-and-drop ordering to Wagtail's SnippetViewSet and ModelViewSet in the a
 
 ## Overview
 
-Wagtail Orderable ViewSet brings modern, AJAX-powered ordering to Wagtail's ViewSet system. It is inspired by [wagtail-orderable](https://github.com/elton2048/wagtail-orderable) and designed for Wagtail 7+ and Django 4.2+.
+Wagtail Orderable ViewSet brings, AJAX-powered ordering to Wagtail's ViewSet system. It is inspired by [wagtail-orderable](https://github.com/elton2048/wagtail-orderable) and designed for Wagtail 7+ and Django 4.2+.
+
+Wagtail core may eventually include this functionality: https://github.com/wagtail/wagtail/pull/12857
 
 ## Features
 
 - Drag-and-drop ordering for SnippetViewSet and ModelViewSet
-- AJAX order updates
-- Custom ordering field support
-- Seamless integration with Wagtail admin UI
-- Visual feedback during drag operations
+- An IncrementingOrderable model mixin
 
 ## Installation
 
@@ -25,42 +24,6 @@ pip install wagtail-orderable-viewset
 
 See [docs/example.md](docs/example.md) for a full example project, including model/snippet setup and data seeding.
 
-## Usage
-
-### For models
-
-```python
-from wagtail_orderable_viewset.viewset import OrderableModelViewSet
-from .models import Testimonial
-
-class TestimonialViewSet(OrderableModelViewSet):
-	model = Testimonial
-	list_display = ["name", "company", "rating", "sort_order"]
-	search_fields = ["name", "company", "content"]
-```
-
-Register your viewset with Wagtail using hooks:
-
-```python
-from wagtail import hooks
-testimonial_viewset = TestimonialViewSet("testimonial")
-
-@hooks.register("register_admin_viewset")
-def register_testimonial_viewset():
-	return testimonial_viewset
-```
-
-### For snippets
-
-```python
-from wagtail_orderable_viewset.viewset import OrderableSnippetViewSet
-from .models import Person
-
-class PersonViewSet(OrderableSnippetViewSet):
-	model = Person
-	list_display = ["name", "team", "sort_order"]
-```
-
 ## Requirements
 
 - Python 3.9+
@@ -69,25 +32,31 @@ class PersonViewSet(OrderableSnippetViewSet):
 
 ## Development
 
-### Setup
+Clone the repository:
 
 ```bash
 git clone https://github.com/nickmoreton/wagtail-orderable-viewset.git
-cd wagtail-orderable-viewset
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .
+```
+
+and change to the directory: `cd wagtail-orderable-viewset`
+
+### Setup
+
+Using UV <https://docs.astral.sh/uv/>
+
+```bash
+uv sync
 ```
 
 ### Running Tests
 
 ```bash
-python runtests.py
+uv run python runtests.py
 ```
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
+Contributions are welcome! Please open an [issue](https://github.com/nm-packages/wagtail-orderable-viewset/issues) or submit a [pull request](https://github.com/nm-packages/wagtail-orderable-viewset/pulls).
 
 ## License
 
