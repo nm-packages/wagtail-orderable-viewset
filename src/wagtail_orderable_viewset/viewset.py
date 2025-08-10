@@ -51,12 +51,13 @@ class OrderableViewSetMixin:
         - /order/ for the order view (drag-and-drop UI)
         - /update-order/ for the AJAX endpoint to update order
         """
-        patterns = super().get_urlpatterns()
-        patterns += [
+        # Prepend custom routes to avoid conflicts with legacy "<pk>/" edit route in Wagtail <= 6.3
+        # where the pk converter may accept arbitrary strings and capture "order" otherwise.
+        ordering_patterns = [
             path("order/", self.order_view, name="order"),
             path("update-order/", self.update_order_view, name="update_order"),
         ]
-        return patterns
+        return ordering_patterns + super().get_urlpatterns()
 
     def get_index_url_name(self) -> str:
         """
