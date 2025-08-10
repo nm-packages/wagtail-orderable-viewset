@@ -2,12 +2,14 @@ from django.db import models
 from wagtail.models import Orderable
 
 
+
 class IncrementingOrderable(Orderable):
     """
-    Abstract model that provides a sort_order field for ordering functionality.
+    Abstract base model for orderable objects using a `sort_order` field.
 
-    This mixin adds a sort_order IntegerField to any model that inherits from it.
-    The field is managed by the ordering functionality.
+    Inherit from this class to automatically add a `sort_order` IntegerField to your model.
+    The field is managed so that new instances are appended to the end of the order by default.
+    Provides a utility method to get the current maximum sort order value for the model.
     """
 
     class Meta:
@@ -15,8 +17,9 @@ class IncrementingOrderable(Orderable):
 
     def get_sort_order_max(self):
         """
-        Get the maximum sort_order value for this model.
-        Useful when creating new instances.
+        Returns the maximum value of the `sort_order` field for this model.
+        Used to determine the next sort order value when creating new instances.
+        If no instances exist, returns 0.
         """
         max_order = self.__class__.objects.aggregate(
             max_order=models.Max("sort_order")
@@ -24,7 +27,7 @@ class IncrementingOrderable(Orderable):
         return max_order or 0
 
     def save(self, *args, **kwargs):
+        # On first save (object creation), set sort_order to max + 1 so new objects are appended.
         if self.pk is None:
-            # Ensure newly-created instances are appended to the end by default
-            setattr(self, "sort_order", self.get_sort_order_max() + 1)
+            self.sort_order = self.get_sort_order_max() + 1
         super().save(*args, **kwargs)
