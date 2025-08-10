@@ -22,7 +22,7 @@ class AdminOrderableE2ETests(WagtailTestUtils, TestCase):
         self.assertIn('href="/admin/testimonial/order/"', resp_index.content.decode())
 
         # Order page renders list and update url
-        resp_order = self.client.get("/admin/testimonial/order/")
+        resp_order = self.client.get("/admin/testimonial/order/", follow=True)
         self.assertEqual(resp_order.status_code, 200)
         self.assertIn("id=\"orderable-list\"", resp_order.content.decode())
         self.assertIn("/admin/testimonial/update-order/", resp_order.content.decode())
@@ -31,6 +31,7 @@ class AdminOrderableE2ETests(WagtailTestUtils, TestCase):
         resp_update = self.client.post(
             "/admin/testimonial/update-order/",
             {"object_ids": [c.id, a.id, b.id]},
+            follow=True,
         )
         self.assertEqual(resp_update.status_code, 200)
         self.assertJSONEqual(resp_update.content.decode(), {"success": True, "updated": 3})
@@ -46,6 +47,7 @@ class AdminOrderableE2ETests(WagtailTestUtils, TestCase):
         resp_update = self.client.post(
             "/admin/team_member/update-order/",
             {"object_ids": [b.id, c.id, a.id]},
+            follow=True,
         )
         self.assertEqual(resp_update.status_code, 200)
         self.assertJSONEqual(resp_update.content.decode(), {"success": True, "updated": 3})
@@ -64,7 +66,7 @@ class AdminOrderableE2ETests(WagtailTestUtils, TestCase):
         self.assertIn('href="/admin/snippets/home/person/order/"', resp_index.content.decode())
 
         # Order page renders and update works
-        resp_order = self.client.get("/admin/snippets/home/person/order/")
+        resp_order = self.client.get("/admin/snippets/home/person/order/", follow=True)
         self.assertEqual(resp_order.status_code, 200)
         self.assertIn("id=\"orderable-list\"", resp_order.content.decode())
 

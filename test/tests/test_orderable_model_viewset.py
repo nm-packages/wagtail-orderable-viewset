@@ -16,6 +16,8 @@ class DummyOrderableModelViewSet(OrderableModelViewSet):
         (),
         {
             "view_name": "index",
+            "search_fields": [],
+            "list_display": [],
             "results_template_name": "",
             "list_filter": [],
             "list_export": [],
