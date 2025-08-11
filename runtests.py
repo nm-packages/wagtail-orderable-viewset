@@ -7,12 +7,17 @@ from django.conf import settings
 from django.test.utils import get_runner
 
 if __name__ == "__main__":
-    # Ensure the test directory is in sys.path
-    test_dir = os.path.join(os.path.dirname(__file__), "test")
-    sys.path.insert(0, test_dir)
+    # Ensure the project root (contains the `test` package) is on sys.path first
+    project_root = os.path.dirname(__file__)
+    sys.path.insert(0, project_root)
+    # Optionally add the test directory to help direct discovery/imports
+    test_dir = os.path.join(project_root, "test")
+    if test_dir not in sys.path:
+        sys.path.insert(1, test_dir)
 
-    # Set DJANGO_SETTINGS_MODULE so Django knows where to find settings
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test.settings")
+    # Set DJANGO_SETTINGS_MODULE to the settings module inside the test package
+    # Use top-level module name to avoid colliding with Python's stdlib "test" package on 3.13+
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
     # Initialise Django before discovering/importing tests that touch models
     django.setup()
