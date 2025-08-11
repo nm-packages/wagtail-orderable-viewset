@@ -1,6 +1,4 @@
 from django.core.management.base import BaseCommand
-from django.db.models import Max
-from decimal import Decimal
 import random
 from faker import Faker
 

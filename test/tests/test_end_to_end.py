@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
 
 from wagtail.test.utils import WagtailTestUtils
 
@@ -24,7 +23,7 @@ class AdminOrderableE2ETests(WagtailTestUtils, TestCase):
         # Order page renders list and update url
         resp_order = self.client.get("/admin/testimonial/order/", follow=True)
         self.assertEqual(resp_order.status_code, 200)
-        self.assertIn("id=\"orderable-list\"", resp_order.content.decode())
+        self.assertIn('id="orderable-list"', resp_order.content.decode())
         self.assertIn("/admin/testimonial/update-order/", resp_order.content.decode())
 
         # Reorder: C, A, B
@@ -34,9 +33,13 @@ class AdminOrderableE2ETests(WagtailTestUtils, TestCase):
             follow=True,
         )
         self.assertEqual(resp_update.status_code, 200)
-        self.assertJSONEqual(resp_update.content.decode(), {"success": True, "updated": 3})
+        self.assertJSONEqual(
+            resp_update.content.decode(), {"success": True, "updated": 3}
+        )
 
-        a.refresh_from_db(); b.refresh_from_db(); c.refresh_from_db()
+        a.refresh_from_db()
+        b.refresh_from_db()
+        c.refresh_from_db()
         self.assertEqual([c.sort_order, a.sort_order, b.sort_order], [1, 2, 3])
 
     def test_modelviewset_team_member_order_update(self):
@@ -50,34 +53,46 @@ class AdminOrderableE2ETests(WagtailTestUtils, TestCase):
             follow=True,
         )
         self.assertEqual(resp_update.status_code, 200)
-        self.assertJSONEqual(resp_update.content.decode(), {"success": True, "updated": 3})
+        self.assertJSONEqual(
+            resp_update.content.decode(), {"success": True, "updated": 3}
+        )
 
-        a.refresh_from_db(); b.refresh_from_db(); c.refresh_from_db()
+        a.refresh_from_db()
+        b.refresh_from_db()
+        c.refresh_from_db()
         self.assertEqual([b.sort_order, c.sort_order, a.sort_order], [1, 2, 3])
 
     def test_snippetviewset_order_page_and_update(self):
-        a = Person.objects.create(name="Alice", age=30, city="London", team="engineering")
+        a = Person.objects.create(
+            name="Alice", age=30, city="London", team="engineering"
+        )
         b = Person.objects.create(name="Bob", age=31, city="Paris", team="engineering")
-        c = Person.objects.create(name="Carol", age=32, city="Berlin", team="engineering")
+        c = Person.objects.create(
+            name="Carol", age=32, city="Berlin", team="engineering"
+        )
 
         # Snippet index should include reorder button for the viewset
         resp_index = self.client.get("/admin/snippets/home/person/")
         self.assertEqual(resp_index.status_code, 200)
-        self.assertIn('href="/admin/snippets/home/person/order/"', resp_index.content.decode())
+        self.assertIn(
+            'href="/admin/snippets/home/person/order/"', resp_index.content.decode()
+        )
 
         # Order page renders and update works
         resp_order = self.client.get("/admin/snippets/home/person/order/", follow=True)
         self.assertEqual(resp_order.status_code, 200)
-        self.assertIn("id=\"orderable-list\"", resp_order.content.decode())
+        self.assertIn('id="orderable-list"', resp_order.content.decode())
 
         resp_update = self.client.post(
             "/admin/snippets/home/person/update-order/",
             {"object_ids": [a.id, c.id, b.id]},
         )
         self.assertEqual(resp_update.status_code, 200)
-        self.assertJSONEqual(resp_update.content.decode(), {"success": True, "updated": 3})
+        self.assertJSONEqual(
+            resp_update.content.decode(), {"success": True, "updated": 3}
+        )
 
-        a.refresh_from_db(); b.refresh_from_db(); c.refresh_from_db()
+        a.refresh_from_db()
+        b.refresh_from_db()
+        c.refresh_from_db()
         self.assertEqual([a.sort_order, c.sort_order, b.sort_order], [1, 2, 3])
-
-
