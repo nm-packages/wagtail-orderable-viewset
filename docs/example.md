@@ -67,7 +67,7 @@ Define a viewset:
 
 ```python
 # admin_views.py
-from wagtail_orderable_viewset.viewset import OrderableModelViewSet
+from wagtail_orderable_viewset.viewsets import OrderableModelViewSet
 
 class TestimonialViewSet(OrderableModelViewSet):
     model = Testimonial
@@ -134,7 +134,7 @@ Define a viewset:
 
 ```python
 # admin_views.py
-from wagtail_orderable_viewset.viewset import OrderableSnippetViewSet
+from wagtail_orderable_viewset.viewsets import OrderableSnippetViewSet
 
 from .models import Person
 
