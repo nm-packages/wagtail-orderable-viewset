@@ -4,87 +4,176 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0002_create_homepage'),
+        ("home", "0002_create_homepage"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='FAQItem',
+            name="FAQItem",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('question', models.CharField(max_length=200)),
-                ('answer', models.TextField()),
-                ('category', models.CharField(choices=[('general', 'General'), ('technical', 'Technical'), ('billing', 'Billing')], max_length=50)),
-                ('display_order', models.IntegerField(default=0, editable=False)),
-                ('is_active', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                ("question", models.CharField(max_length=200)),
+                ("answer", models.TextField()),
+                (
+                    "category",
+                    models.CharField(
+                        choices=[
+                            ("general", "General"),
+                            ("technical", "Technical"),
+                            ("billing", "Billing"),
+                        ],
+                        max_length=50,
+                    ),
+                ),
+                ("display_order", models.IntegerField(default=0, editable=False)),
+                ("is_active", models.BooleanField(default=True)),
             ],
             options={
-                'ordering': ['question'],
+                "ordering": ["question"],
             },
         ),
         migrations.CreateModel(
-            name='Person',
+            name="Person",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('name', models.CharField(max_length=100)),
-                ('age', models.IntegerField()),
-                ('city', models.CharField(max_length=100)),
-                ('is_active', models.BooleanField(default=True)),
-                ('team', models.CharField(choices=[('engineering', 'Engineering'), ('marketing', 'Marketing'), ('sales', 'Sales'), ('support', 'Support'), ('hr', 'HR')], max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("age", models.IntegerField()),
+                ("city", models.CharField(max_length=100)),
+                ("is_active", models.BooleanField(default=True)),
+                (
+                    "team",
+                    models.CharField(
+                        choices=[
+                            ("engineering", "Engineering"),
+                            ("marketing", "Marketing"),
+                            ("sales", "Sales"),
+                            ("support", "Support"),
+                            ("hr", "HR"),
+                        ],
+                        max_length=100,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Person',
-                'verbose_name_plural': 'People',
-                'ordering': ['name'],
+                "verbose_name": "Person",
+                "verbose_name_plural": "People",
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Service',
+            name="Service",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('title', models.CharField(max_length=100)),
-                ('description', models.TextField()),
-                ('price', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-                ('service_order', models.IntegerField(default=0, editable=False)),
-                ('is_featured', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                ("title", models.CharField(max_length=100)),
+                ("description", models.TextField()),
+                (
+                    "price",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=10, null=True
+                    ),
+                ),
+                ("service_order", models.IntegerField(default=0, editable=False)),
+                ("is_featured", models.BooleanField(default=False)),
             ],
             options={
-                'ordering': ['title'],
+                "ordering": ["title"],
             },
         ),
         migrations.CreateModel(
-            name='TeamMember',
+            name="TeamMember",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('name', models.CharField(max_length=100)),
-                ('position', models.CharField(max_length=100)),
-                ('bio', models.TextField()),
-                ('email', models.EmailField(blank=True, max_length=254)),
-                ('photo', models.ImageField(blank=True, null=True, upload_to='team_photos/')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("position", models.CharField(max_length=100)),
+                ("bio", models.TextField()),
+                ("email", models.EmailField(blank=True, max_length=254)),
+                (
+                    "photo",
+                    models.ImageField(blank=True, null=True, upload_to="team_photos/"),
+                ),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.CreateModel(
-            name='Testimonial',
+            name="Testimonial",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('name', models.CharField(max_length=100)),
-                ('company', models.CharField(max_length=100)),
-                ('content', models.TextField()),
-                ('rating', models.IntegerField(choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)], default=5)),
-                ('is_featured', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "sort_order",
+                    models.IntegerField(blank=True, editable=False, null=True),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("company", models.CharField(max_length=100)),
+                ("content", models.TextField()),
+                (
+                    "rating",
+                    models.IntegerField(
+                        choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)], default=5
+                    ),
+                ),
+                ("is_featured", models.BooleanField(default=False)),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
     ]

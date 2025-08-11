@@ -4,20 +4,19 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0004_remove_faqitem_display_order_and_more'),
+        ("home", "0004_remove_faqitem_display_order_and_more"),
     ]
 
     operations = [
         migrations.DeleteModel(
-            name='FAQItem',
+            name="FAQItem",
         ),
         migrations.DeleteModel(
-            name='Service',
+            name="Service",
         ),
         migrations.RemoveField(
-            model_name='teammember',
-            name='photo',
+            model_name="teammember",
+            name="photo",
         ),
     ]

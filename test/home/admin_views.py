@@ -1,4 +1,7 @@
-from wagtail_orderable_viewset.viewset import OrderableModelViewSet, OrderableSnippetViewSet
+from wagtail_orderable_viewset.viewset import (
+    OrderableModelViewSet,
+    OrderableSnippetViewSet,
+)
 from .models import Testimonial, TeamMember, Person
 
 
@@ -11,25 +14,26 @@ class TestimonialViewSet(OrderableModelViewSet):
     `search_fields` & `list_filter` is included to demonstrate that the reorder button position
     which will be right aligned in the slim header.
     """
+
     model = Testimonial
 
     # sort order is included for debugging only
-    list_display = ['name', 'company', 'rating', 'is_featured', 'sort_order']
-    list_filter = ['is_featured']
-    list_export = ['name', 'company', 'rating', 'is_featured']
-    
-    form_fields = ['name', 'company', 'content', 'rating', 'is_featured']
+    list_display = ["name", "company", "rating", "is_featured", "sort_order"]
+    list_filter = ["is_featured"]
+    list_export = ["name", "company", "rating", "is_featured"]
 
-    search_fields = ['name', 'company', 'content']
-    order_by = ['name']
+    form_fields = ["name", "company", "content", "rating", "is_featured"]
 
-    menu_label = 'Testimonials'
-    icon = 'folder-open-1'
+    search_fields = ["name", "company", "content"]
+    order_by = ["name"]
+
+    menu_label = "Testimonials"
+    icon = "folder-open-1"
     menu_order = 100
     add_to_admin_menu = True
 
 
-testimonial_viewset = TestimonialViewSet('testimonial')
+testimonial_viewset = TestimonialViewSet("testimonial")
 
 
 class TeamMemberViewSet(OrderableModelViewSet):
@@ -41,22 +45,23 @@ class TeamMemberViewSet(OrderableModelViewSet):
     `search_fields` & `list_filter` is not included to demonstrate that the reorder button position
     which will be left aligned in the slim header.
     """
+
     model = TeamMember
 
     # sort order is included for debugging only
-    list_display = ['name', 'position', 'email', 'sort_order']
-    
-    form_fields = ['name', 'position', 'bio', 'email']
-    
-    order_by = ['name']
+    list_display = ["name", "position", "email", "sort_order"]
 
-    menu_label = 'Team members'
-    icon = 'user'
+    form_fields = ["name", "position", "bio", "email"]
+
+    order_by = ["name"]
+
+    menu_label = "Team members"
+    icon = "user"
     menu_order = 110
     add_to_admin_menu = True
 
 
-team_member_viewset = TeamMemberViewSet('team_member')
+team_member_viewset = TeamMemberViewSet("team_member")
 
 
 class PersonViewSet(OrderableSnippetViewSet):
@@ -68,16 +73,18 @@ class PersonViewSet(OrderableSnippetViewSet):
     `search_fields` & `list_filter` is included to demonstrate that the reorder button position
     which will be right aligned in the slim header.
     """
+
     model = Person
 
     # sort order is included for debugging only
-    list_display = ['name', 'age', 'city', 'team', 'is_active', 'sort_order']
-    list_export = ['name', 'age', 'city', 'team', 'is_active']
-    list_filter = ['is_active']
-    search_fields = ['name', 'city', 'team']
-    
-    order_by = ['name']
+    list_display = ["name", "age", "city", "team", "is_active", "sort_order"]
+    list_export = ["name", "age", "city", "team", "is_active"]
+    list_filter = ["is_active"]
+    search_fields = ["name", "city", "team"]
 
-    icon = 'user'
+    order_by = ["name"]
+
+    icon = "user"
+
 
 person_viewset = PersonViewSet()

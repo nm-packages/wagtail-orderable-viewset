@@ -4,23 +4,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0003_test_app'),
+        ("home", "0003_test_app"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='faqitem',
-            name='display_order',
+            model_name="faqitem",
+            name="display_order",
         ),
         migrations.RemoveField(
-            model_name='service',
-            name='service_order',
+            model_name="service",
+            name="service_order",
         ),
         migrations.AlterField(
-            model_name='person',
-            name='team',
-            field=models.CharField(choices=[('engineering', 'Engineering'), ('marketing', 'Marketing'), ('sales', 'Sales'), ('support', 'Support'), ('hr', 'HR')], max_length=50),
+            model_name="person",
+            name="team",
+            field=models.CharField(
+                choices=[
+                    ("engineering", "Engineering"),
+                    ("marketing", "Marketing"),
+                    ("sales", "Sales"),
+                    ("support", "Support"),
+                    ("hr", "HR"),
+                ],
+                max_length=50,
+            ),
         ),
     ]

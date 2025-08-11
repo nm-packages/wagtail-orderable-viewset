@@ -38,7 +38,9 @@ class OrderableViewSetMixin:
             "sort_order_field": self.sort_order_field_name,
         }
         # Merge/override any existing extra_context
-        if "extra_context" in context_kwargs and isinstance(context_kwargs["extra_context"], dict):
+        if "extra_context" in context_kwargs and isinstance(
+            context_kwargs["extra_context"], dict
+        ):
             context_kwargs["extra_context"].update(extra_context)
         else:
             context_kwargs["extra_context"] = extra_context
@@ -113,11 +115,14 @@ class OrderableViewSetMixin:
         """
         try:
             # Bulk reorder support: handle array of object IDs from the client
-            object_ids = request.POST.getlist("object_ids[]") or request.POST.getlist("object_ids")
+            object_ids = request.POST.getlist("object_ids[]") or request.POST.getlist(
+                "object_ids"
+            )
 
             if object_ids:
                 # Update order based on the submitted sequence
                 from django.db import transaction
+
                 with transaction.atomic():
                     for index, pk in enumerate(object_ids, start=1):
                         self.model.objects.filter(pk=pk).update(
@@ -137,6 +142,7 @@ class OrderableModelViewSet(OrderableViewSetMixin, ModelViewSet):
     - Injects order-related context into the listing view.
     - Uses a custom index template for the listing page.
     """
+
     index_template_name = "wagtail_orderable_viewset/list.html"
 
 
@@ -148,4 +154,5 @@ class OrderableSnippetViewSet(OrderableViewSetMixin, SnippetViewSet):
     - Injects order-related context into the listing view.
     - Uses a custom index template for the snippets listing page.
     """
+
     index_template_name = "wagtail_orderable_viewset/snippets_list.html"

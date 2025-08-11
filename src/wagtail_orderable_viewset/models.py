@@ -2,7 +2,6 @@ from django.db import models
 from wagtail.models import Orderable
 
 
-
 class IncrementingOrderable(Orderable):
     """
     Abstract base model for orderable objects using a `sort_order` field.

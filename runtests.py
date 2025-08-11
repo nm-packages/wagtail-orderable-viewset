@@ -1,6 +1,6 @@
 import sys
 import os
- 
+
 
 import django
 from django.conf import settings
@@ -30,6 +30,7 @@ if __name__ == "__main__":
     # Run coverage report if coverage is installed and tests were run under coverage
     try:
         import coverage
+
         cov = coverage.Coverage.current()
         if cov:
             cov.stop()
