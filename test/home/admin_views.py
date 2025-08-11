@@ -1,4 +1,4 @@
-from wagtail_orderable_viewset.viewset import (
+from wagtail_orderable_viewset.viewsets import (
     OrderableModelViewSet,
     OrderableSnippetViewSet,
 )
