@@ -81,6 +81,12 @@ def run_tests(
         print("Running tests with DEBUG=True")
 
     # Display test configuration
+    try:
+        import wagtail
+
+        print(f"Wagtail version: {wagtail.__version__}")
+    except ImportError:
+        print("Wagtail not installed")
     print(f"Django version: {django.get_version()}")
     print(f"Python version: {sys.version}")
     print(f"Database: {settings.DATABASES['default']['ENGINE']}")
@@ -117,12 +123,11 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python runtests.py                           # Run all wagtail_orderable_viewset tests
-  python runtests.py test_views                # Run specific test module
-  python runtests.py test_views.UnveilReportsIndexViewTest  # Run specific test class
-  python runtests.py --verbose --failfast      # Verbose output, stop on first failure
-  python runtests.py --debug-mode              # Run with DEBUG=True
-  python runtests.py --keepdb                  # Keep test database for faster subsequent runs
+  python runtests.py                            # Run all wagtail_orderable_viewset tests
+  python runtests.py test.tests.<file>.<class>  # Run specific test class
+  python runtests.py --verbose --failfast       # Verbose output, stop on first failure
+  python runtests.py --debug-mode               # Run with DEBUG=True
+  python runtests.py --keepdb                   # Keep test database for faster subsequent runs
         """,
     )
 

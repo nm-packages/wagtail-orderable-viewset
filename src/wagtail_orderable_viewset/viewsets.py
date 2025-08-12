@@ -5,6 +5,8 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import render
 from django.urls import path, reverse
 
+from wagtail import VERSION as WAGTAIL_VERSION
+
 from wagtail.admin.viewsets.model import ModelViewSet
 from wagtail.snippets.views.snippets import SnippetViewSet
 
@@ -60,6 +62,19 @@ class OrderableViewSetMixin:
             path("order/", self.order_view, name="order"),
             path("update-order/", self.update_order_view, name="update_order"),
         ]
+
+        # Compatibility note:
+        # Wagtail 6.x ModelViewSet URL patterns include a bare '<pk>/' route for the edit view.
+        # That greedy segment will match any non-slash token (e.g. 'order', 'update-order'),
+        # causing Wagtail/Django to try to interpret it as a primary key and raising
+        # "Field 'id' expected a number" errors. In Wagtail 7.0 the core URLs were
+        # refactored to use action-first patterns like 'edit/<pk>/' so 'order/' no longer
+        # collides. To stay compatible we PREPEND our specific 'order/' and 'update-order/'
+        # routes for Wagtail < 7.0 (ensuring they resolve before '<pk>/'), and APPEND them
+        # for >= 7.0 where the conflict no longer exists.
+
+        if WAGTAIL_VERSION < (7, 0):
+            return ordering_patterns + url_patterns
         return url_patterns + ordering_patterns
 
     def get_index_url_name(self) -> str:
