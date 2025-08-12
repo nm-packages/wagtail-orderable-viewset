@@ -49,15 +49,18 @@ class OrderableViewSetMixin:
     def get_urlpatterns(self):
         """
         Append ordering routes to the viewset's URL patterns.
+
         Adds:
         - /order/ for the order view (drag-and-drop UI)
         - /update-order/ for the AJAX endpoint to update order
         """
+        url_patterns = super().get_urlpatterns()
+
         ordering_patterns = [
             path("order/", self.order_view, name="order"),
             path("update-order/", self.update_order_view, name="update_order"),
         ]
-        return ordering_patterns + super().get_urlpatterns()
+        return url_patterns + ordering_patterns
 
     def get_index_url_name(self) -> str:
         """
@@ -78,6 +81,7 @@ class OrderableViewSetMixin:
     def get_order_context_data(self, objects):
         """
         Returns context data for the order view template.
+
         Includes:
         - objects: ordered queryset
         - model metadata and verbose names
