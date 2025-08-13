@@ -133,13 +133,24 @@ class Command(BaseCommand):
                 "Amsterdam",
                 "Copenhagen",
             ]
+            teams = ["engineering", "marketing", "sales", "support", "hr"]
             for i in range(existing, target):
                 name = faker.name()
                 age = random.randint(18, 80)
                 city = random.choice(cities)
+                team = random.choice(teams)
+                # Skew towards active, but introduce some inactive records for filtering UI
+                is_active = random.random() < 0.85
                 sort_order = i + 1
                 to_create.append(
-                    Person(name=name, age=age, city=city, sort_order=sort_order)
+                    Person(
+                        name=name,
+                        age=age,
+                        city=city,
+                        team=team,
+                        is_active=is_active,
+                        sort_order=sort_order,
+                    )
                 )
             Person.objects.bulk_create(to_create)
             self.stdout.write(f"Added {len(to_create)} people (total: {target}).")

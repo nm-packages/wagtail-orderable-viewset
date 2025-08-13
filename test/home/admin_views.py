@@ -79,7 +79,7 @@ class PersonViewSet(OrderableSnippetViewSet):
     # sort order is included for debugging only
     list_display = ["name", "age", "city", "team", "is_active", "sort_order"]
     list_export = ["name", "age", "city", "team", "is_active"]
-    list_filter = ["is_active"]
+    list_filter = ["is_active", "team"]
     search_fields = ["name", "city", "team"]
 
     order_by = ["name"]
