@@ -4,6 +4,7 @@ from django.views.decorators.http import require_POST
 from django.utils.decorators import method_decorator
 from django.shortcuts import render
 from django.urls import path, reverse
+from django.utils.functional import cached_property
 
 from wagtail import VERSION as WAGTAIL_VERSION
 
@@ -72,6 +73,9 @@ class OrderableViewSetMixin:
         # collides. To stay compatible we PREPEND our specific 'order/' and 'update-order/'
         # routes for Wagtail < 7.0 (ensuring they resolve before '<pk>/'), and APPEND them
         # for >= 7.0 where the conflict no longer exists.
+        # When the package no longer needs to support the Wagtail < 7.0 behavior, these
+        # patterns can be simplified by removing the version checks and always using
+        # the action-first patterns.
 
         if WAGTAIL_VERSION < (7, 0):
             return ordering_patterns + url_patterns
@@ -151,6 +155,12 @@ class OrderableViewSetMixin:
 
         except Exception as e:
             return JsonResponse({"error": f"Server error: {e}"}, status=500)
+
+    @cached_property
+    def menu_url(self):
+        if WAGTAIL_VERSION < (7, 0):
+            return reverse(self.get_url_name(self.get_index_url_name()))
+        return reverse(self.get_url_name(self.get_urlpatterns()[0].name))
 
 
 class OrderableModelViewSet(OrderableViewSetMixin, ModelViewSet):
