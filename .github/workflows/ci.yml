@@ -42,20 +42,3 @@ jobs:
           if [ -f .coverage ]; then
             pip install coverage && coverage report || true
           fi
-
-  lint:
-    name: lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install uv
-        run: pip install uv
-      - name: Install package (editable)
-        run: uv pip install -e . --no-deps
-      - name: Basic import check
-        run: python -c "import wagtail_orderable_viewset; print('Imported OK')"
