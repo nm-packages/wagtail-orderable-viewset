@@ -33,8 +33,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
         isSaving = true;
 
-        const csrfMatch = document.cookie.match(/(?:^|; )csrftoken=([^;]+)/);
-        const csrfToken = csrfMatch ? decodeURIComponent(csrfMatch[1]) : '';
+        // Extract CSRF token from hidden form field
+        const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        const csrfToken = csrfInput ? csrfInput.value : undefined;
+        console.log('CSRF Token from form field:', csrfToken);
+
+        // Prepare headers, only set X-CSRFToken if token is found
+        const headers = {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+        };
+        if (csrfToken) {
+            headers["X-CSRFToken"] = csrfToken;
+        }
         const formData = new URLSearchParams();
         order.forEach((id) => formData.append('object_ids[]', id));
 
