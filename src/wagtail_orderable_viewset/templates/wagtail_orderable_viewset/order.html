@@ -9,8 +9,8 @@
     {% include "wagtailadmin/shared/header.html" with title=reorder_trans|add:" "|add:model_verbose_name_plural icon="list-ul" %}
 
     <div class="nice-padding">
-        <form id="orderable-form">{% csrf_token %}</form>
         {% if object_list %}
+            <form id="orderable-form">{% csrf_token %}</form>
             <div class="help-block help-info">
                 <svg class="icon icon-help icon" aria-hidden="true"><use href="#icon-help"></use></svg>
                 <p>{% trans "Drag and drop a" %} {{ model_verbose_name|lower }} {% trans "below to change it's order. Changes are saved automatically." %}</p>

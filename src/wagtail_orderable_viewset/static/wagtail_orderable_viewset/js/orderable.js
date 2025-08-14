@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Extract CSRF token from hidden form field
         const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
         const csrfToken = csrfInput ? csrfInput.value : undefined;
-        console.log('CSRF Token from form field:', csrfToken);
 
         // Prepare headers, only set X-CSRFToken if token is found
         const headers = {
