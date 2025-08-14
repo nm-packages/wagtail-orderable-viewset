@@ -3,6 +3,8 @@
 
 Add drag-and-drop ordering to Wagtail's SnippetViewSet and ModelViewSet in the admin panel.
 
+Note: the feature is planned for a [future release](https://github.com/wagtail/wagtail/pull/12857) of Wagtail core.
+
 ## Overview
 
 Wagtail Orderable ViewSet brings, AJAX-powered ordering to Wagtail's ViewSet system. It is inspired by [wagtail-orderable](https://github.com/elton2048/wagtail-orderable) and designed for Wagtail 7+ and Django 4.2+.
